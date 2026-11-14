@@ -1,6 +1,5 @@
 package br.gov.go.defensoria.portal.solicitacao.repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,29 +9,27 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
+import br.gov.go.defensoria.portal.solicitacao.domain.AreaAtuacao;
 import br.gov.go.defensoria.portal.solicitacao.domain.Solicitacao;
 import br.gov.go.defensoria.portal.solicitacao.domain.StatusSolicitacao;
 
+/** O kanban usa {@link SolicitacaoSpecifications} via JpaSpecificationExecutor. */
 public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long>, JpaSpecificationExecutor<Solicitacao> {
 
-    /**
-     * Cards do kanban numa única consulta (sem N+1): assistido, unidade e responsável
-     * vêm no mesmo SELECT. Prioridade ALTA primeiro, depois as mais antigas.
-     */
-    @Query("""
-            select s from Solicitacao s
-              join fetch s.assistido
-              join fetch s.unidade
-              left join fetch s.responsavel
-            where s.status in :status
-            order by case when s.prioridade = br.gov.go.defensoria.portal.solicitacao.domain.Prioridade.ALTA
-                          then 0 else 1 end,
-                     s.criadoEm
-            """)
-    List<Solicitacao> buscarParaKanban(@Param("status") Collection<StatusSolicitacao> status);
+    interface TotalPorStatus {
+        StatusSolicitacao getStatus();
 
+        long getTotal();
+    }
+
+    interface TotalPorArea {
+        AreaAtuacao getArea();
+
+        long getTotal();
+    }
+
+    @EntityGraph(attributePaths = { "assistido", "unidade", "responsavel" })
     Optional<Solicitacao> findByProtocolo(String protocolo);
 
     /** "Meus pedidos": unidade no mesmo SELECT para a lista não fazer N+1. */
@@ -42,6 +39,12 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long>,
     /** Só encontra se o pedido for do assistido ligado a este usuário. */
     @EntityGraph(attributePaths = "unidade")
     Optional<Solicitacao> findByProtocoloAndAssistidoUsuarioId(String protocolo, Long usuarioId);
+
+    @Query("select s.status as status, count(s) as total from Solicitacao s group by s.status")
+    List<TotalPorStatus> contarPorStatus();
+
+    @Query("select s.area as area, count(s) as total from Solicitacao s group by s.area")
+    List<TotalPorArea> contarPorArea();
 
     /** Próximo número da sequência usada no protocolo (DPE-AAAA-NNNNNN). */
     @Query(value = "select nextval('protocolo_seq')", nativeQuery = true)
