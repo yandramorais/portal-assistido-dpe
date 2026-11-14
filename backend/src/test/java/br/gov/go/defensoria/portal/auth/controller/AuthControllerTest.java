@@ -74,7 +74,11 @@ class AuthControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andReturn().getResponse().getContentAsString();
 
-        assertThat(emailInexistente).isEqualTo(senhaErrada);
+        // Mesmo corpo nos dois casos; só o requestId (um por requisição) muda.
+        for (String campo : java.util.List.of("$.type", "$.title", "$.status", "$.detail", "$.instance")) {
+            assertThat((Object) JsonPath.read(emailInexistente, campo)).as(campo)
+                    .isEqualTo(JsonPath.read(senhaErrada, campo));
+        }
     }
 
     @Test
