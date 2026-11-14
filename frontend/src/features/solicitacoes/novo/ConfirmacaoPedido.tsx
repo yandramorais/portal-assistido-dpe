@@ -5,7 +5,6 @@ import { LinkBotao } from '../../../components/ui';
 import { ROTULO_STATUS } from '../shared/rotulos';
 import type { SolicitacaoDetalhe } from '../shared/tipos';
 
-/** Tela mostrada logo após o envio: protocolo em destaque e o que acontece agora. */
 export function ConfirmacaoPedido({ pedido }: { pedido: SolicitacaoDetalhe }) {
   useTituloDaPagina('Pedido enviado');
   const titulo = useRef<HTMLHeadingElement>(null);

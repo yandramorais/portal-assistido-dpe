@@ -31,7 +31,6 @@ import br.gov.go.defensoria.portal.workflow.repository.MensagemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/** Único ponto que muda o status de um pedido: valida o fluxo, grava histórico e publica o evento. */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -44,7 +43,6 @@ public class TransicaoService {
     private final ApplicationEventPublisher eventPublisher;
     private final Clock clock;
 
-    /** Mudança feita pela equipe no kanban. */
     @Transactional
     public SolicitacaoAdminResponse alterarStatus(String protocolo, AlterarStatusRequest request, Long usuarioId) {
         Solicitacao solicitacao = solicitacaoRepository.findByProtocolo(protocolo)
@@ -62,17 +60,12 @@ public class TransicaoService {
             mensagemRepository.save(new Mensagem(solicitacao, autor, request.devolutiva().trim(), true));
         }
 
-        // Grava agora para devolver a versão já incrementada.
         solicitacaoRepository.flush();
         return SolicitacaoAdminResponse.de(solicitacao,
                 historicoRepository.findBySolicitacaoIdOrderByCriadoEm(solicitacao.getId()),
                 mensagemRepository.findBySolicitacaoIdOrderByCriadoEm(solicitacao.getId()));
     }
 
-    /**
-     * Aplica a transição, grava o histórico e publica {@link SolicitacaoAtualizadaEvent}.
-     * Também usada quando o assistido responde a uma pendência (sem conferir versão).
-     */
     @Transactional(propagation = Propagation.MANDATORY)
     public void transicionar(Solicitacao solicitacao, StatusSolicitacao destino, String observacao, Usuario autor,
             boolean notificarAssistido) {
@@ -87,7 +80,6 @@ public class TransicaoService {
                 anterior, destino, emailDoAssistido(solicitacao.getAssistido()), notificarAssistido));
     }
 
-    /** Versão diferente da carregada pela tela: alguém mexeu no pedido nesse meio tempo. */
     public static void conferirVersao(Solicitacao solicitacao, Integer versaoInformada) {
         if (!Objects.equals(solicitacao.getVersao(), versaoInformada)) {
             throw new ConflitoVersaoException();
@@ -148,12 +140,10 @@ public class TransicaoService {
             case ENCAMINHADO -> solicitacao.setEncaminhamentoDestino(request.destino().trim());
             case INDEFERIDO -> solicitacao.setMotivoIndeferimento(request.motivo().trim());
             default -> {
-                // Demais destinos não têm campos próprios.
             }
         }
     }
 
-    /** Observação do histórico no mesmo padrão do seed. */
     private static String observacao(AlterarStatusRequest request) {
         return switch (request.novoStatus()) {
             case DEFERIDO -> "Atendimento deferido e agendado.";

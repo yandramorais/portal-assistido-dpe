@@ -28,7 +28,6 @@ import br.gov.go.defensoria.portal.TestcontainersConfiguration;
 import br.gov.go.defensoria.portal.notificacao.event.SolicitacaoAtualizadaEvent;
 import br.gov.go.defensoria.portal.solicitacao.domain.StatusSolicitacao;
 
-/** Conversa do pedido. João (CPF 08301661305) tem um pedido de Família pendente de documentação no seed. */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
@@ -64,7 +63,6 @@ class MensagemControllerTest {
                         .value("Assistido respondeu à solicitação de documentos."))
                 .andExpect(jsonPath("$.mensagens[-1].conteudo").value("Enviei o contracheque pelo e-mail da unidade."));
 
-        // A mudança partiu do próprio assistido: evento publicado, mas sem e-mail para ele.
         assertThat(eventos.stream(SolicitacaoAtualizadaEvent.class)).singleElement()
                 .satisfies(e -> {
                     assertThat(e.statusNovo()).isEqualTo(StatusSolicitacao.EM_ANALISE);

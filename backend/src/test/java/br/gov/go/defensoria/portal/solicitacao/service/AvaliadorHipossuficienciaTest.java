@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import br.gov.go.defensoria.portal.shared.config.DpeProperties;
 import br.gov.go.defensoria.portal.solicitacao.domain.Hipossuficiencia;
 
-/** Limite: 3 x R$ 1.621,00 = R$ 4.863,00. */
 class AvaliadorHipossuficienciaTest {
 
     private final AvaliadorHipossuficiencia avaliador = new AvaliadorHipossuficiencia(

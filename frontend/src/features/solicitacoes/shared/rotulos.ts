@@ -6,7 +6,6 @@ import type {
   Vulnerabilidade,
 } from './tipos';
 
-/** Mesma ordem e descrições do enum AreaAtuacao do backend. */
 export const AREAS: ReadonlyArray<{ valor: AreaAtuacao; rotulo: string }> = [
   { valor: 'FAMILIA', rotulo: 'Família' },
   { valor: 'CIVEL', rotulo: 'Cível' },
@@ -23,7 +22,6 @@ export const ROTULO_AREA: Record<AreaAtuacao, string> = Object.fromEntries(
   AREAS.map((a) => [a.valor, a.rotulo]),
 ) as Record<AreaAtuacao, string>;
 
-/** Sugestões de assunto por área (o assistido pode escrever outro). */
 export const ASSUNTOS_POR_AREA: Record<AreaAtuacao, readonly string[]> = {
   FAMILIA: [
     'Pensão alimentícia',

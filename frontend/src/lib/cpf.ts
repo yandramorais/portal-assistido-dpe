@@ -1,9 +1,5 @@
 import { apenasDigitos } from './mascaras';
 
-/**
- * Mesmo cálculo do backend (CpfValidator): 11 dígitos, não todos iguais e os dois
- * dígitos verificadores corretos. Aceita com ou sem máscara.
- */
 export function cpfValido(valor: string): boolean {
   const cpf = apenasDigitos(valor);
   if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;

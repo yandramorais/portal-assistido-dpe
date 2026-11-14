@@ -10,7 +10,6 @@ import type { Pagina, SolicitacaoResumo } from '../shared/tipos';
 
 const POR_PAGINA = 10;
 
-/** Lista dos pedidos do assistido, mais recentes primeiro. A página atual fica na URL (?pagina=2). */
 export function MeusPedidosPage() {
   const [parametros, setParametros] = useSearchParams();
   const pagina = Math.max(1, Number(parametros.get('pagina')) || 1);

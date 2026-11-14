@@ -1,7 +1,6 @@
 import { cn } from '../../lib/cn';
 
 interface SpinnerProps {
-  /** Texto lido por leitores de tela. */
   rotulo?: string;
   className?: string;
 }

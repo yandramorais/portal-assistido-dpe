@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
-/** Postgres 16 real em container para os testes que tocam o banco. */
 @TestConfiguration(proxyBeanMethods = false)
 public class TestcontainersConfiguration {
 

@@ -5,11 +5,9 @@ import { useTituloDaPagina } from './useTituloDaPagina';
 interface CabecalhoDePaginaProps {
   titulo: string;
   descricao?: ReactNode;
-  /** Ações à direita do título (ex.: botão "Novo pedido"). */
   acoes?: ReactNode;
 }
 
-/** h1 da página + título da aba do navegador. */
 export function CabecalhoDePagina({ titulo, descricao, acoes }: CabecalhoDePaginaProps) {
   useTituloDaPagina(titulo);
   return (

@@ -1,10 +1,5 @@
 import type { Config } from 'tailwindcss';
 
-/**
- * Tokens visuais do Portal do Assistido (carregado pelo src/index.css via @config).
- * Visual institucional e sóbrio: verde escuro como primária, cinzas neutros e um único
- * tom de alerta (danger). Raio pequeno e bordas finas.
- */
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {

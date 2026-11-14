@@ -1,11 +1,5 @@
 import { expirado, lerClaims } from './jwt';
 
-/**
- * Guarda o token da sessão: em memória e no sessionStorage (some ao fechar a aba).
- * Fica fora do React para o api.ts ler o token sem depender da ordem de montagem
- * dos componentes; o AuthContext assina as mudanças.
- */
-
 export type MotivoEncerramento = 'saiu' | 'expirou';
 
 type Ouvinte = () => void;
@@ -23,7 +17,6 @@ function carregarSalvo(): string | null {
     }
     return salvo;
   } catch {
-    // sessionStorage indisponível (modo privado restrito etc.): segue só em memória.
     return null;
   }
 }
@@ -41,7 +34,6 @@ export const sessao = {
     return token;
   },
 
-  /** Motivo do último encerramento, para a tela de login explicar ("sua sessão expirou"). */
   motivoDoUltimoEncerramento(): MotivoEncerramento | null {
     return ultimoMotivo;
   },
@@ -51,9 +43,7 @@ export const sessao = {
     ultimoMotivo = null;
     try {
       sessionStorage.setItem(CHAVE, novoToken);
-    } catch {
-      // Sem storage: a sessão vale só enquanto a página estiver aberta.
-    }
+    } catch {}
     avisar();
   },
 
@@ -63,9 +53,7 @@ export const sessao = {
     ultimoMotivo = motivo;
     try {
       sessionStorage.removeItem(CHAVE);
-    } catch {
-      // Nada a limpar.
-    }
+    } catch {}
     avisar();
   },
 

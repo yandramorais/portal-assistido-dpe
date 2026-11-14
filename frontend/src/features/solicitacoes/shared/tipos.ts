@@ -1,5 +1,3 @@
-/** Tipos que espelham os DTOs do backend (pacotes solicitacao, unidade e assistido). */
-
 export type AreaAtuacao =
   | 'FAMILIA'
   | 'CIVEL'
@@ -42,7 +40,6 @@ export interface Unidade {
   telefone: string | null;
 }
 
-/** Página do Spring Data (modo VIA_DTO). */
 export interface Pagina<T> {
   content: T[];
   page: { size: number; number: number; totalElements: number; totalPages: number };

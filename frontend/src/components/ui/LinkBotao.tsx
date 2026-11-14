@@ -7,7 +7,6 @@ interface LinkBotaoProps extends LinkProps {
   tamanho?: TamanhoBotao;
 }
 
-/** Navegação com aparência de botão (ex.: "Fazer um pedido"). Continua sendo um link para o leitor de tela. */
 export function LinkBotao({
   variante = 'primaria',
   tamanho = 'md',

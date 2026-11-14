@@ -23,7 +23,6 @@ import br.gov.go.defensoria.portal.unidade.dto.UnidadeResponse;
 import br.gov.go.defensoria.portal.workflow.domain.HistoricoStatus;
 import br.gov.go.defensoria.portal.workflow.domain.Mensagem;
 
-/** Pedido completo para a equipe: dados do assistido, notas internas e versão para o lock otimista. */
 public record SolicitacaoAdminResponse(
         String protocolo,
         Integer versao,

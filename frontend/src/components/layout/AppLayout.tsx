@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom';
 import { Cabecalho } from './Cabecalho';
 import { Rodape } from './Rodape';
 
-/** Moldura das páginas: atalho para o conteúdo, cabeçalho, área principal e rodapé. */
 export function AppLayout() {
   return (
     <div className="flex min-h-screen flex-col">

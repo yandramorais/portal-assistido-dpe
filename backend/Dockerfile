@@ -1,4 +1,3 @@
-# Build
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 COPY mvnw ./
@@ -8,7 +7,6 @@ RUN ./mvnw -B -q dependency:go-offline
 COPY src src
 RUN ./mvnw -B -q package -DskipTests
 
-# Execução
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 RUN addgroup -S portal && adduser -S portal -G portal

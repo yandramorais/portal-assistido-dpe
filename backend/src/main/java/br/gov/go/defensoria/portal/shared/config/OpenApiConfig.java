@@ -19,13 +19,6 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 
-/**
- * Documentação da API em /swagger-ui.html (JSON em /v3/api-docs).
- *
- * <p>Todas as rotas exigem o token Bearer, menos as marcadas com {@code @SecurityRequirements}
- * vazio (login, cadastro, unidades). Erros saem como ProblemDetail (application/problem+json)
- * com o {@code requestId} para o suporte.
- */
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
@@ -52,10 +45,6 @@ public class OpenApiConfig {
     private static final String PROBLEM_JSON = "application/problem+json";
     private static final String PROBLEM_DETAIL_REF = "#/components/schemas/ProblemDetail";
 
-    /**
-     * Completa cada operação com as respostas de erro comuns (401/403 nas protegidas, 500 em
-     * todas) e põe o schema ProblemDetail em toda resposta 4xx/5xx declarada sem corpo.
-     */
     @Bean
     OpenApiCustomizer respostasDeErroPadrao() {
         return openApi -> {

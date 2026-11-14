@@ -35,10 +35,6 @@ import br.gov.go.defensoria.portal.workflow.repository.HistoricoStatusRepository
 import br.gov.go.defensoria.portal.workflow.repository.MensagemRepository;
 import jakarta.persistence.EntityManager;
 
-/**
- * Sobe o Postgres 16 via Testcontainers, aplica o Liquibase (schema + seed, context dev)
- * e o Hibernate valida o mapeamento (ddl-auto=validate) ao criar o contexto.
- */
 @DataJpaTest(properties = "spring.jpa.properties.hibernate.generate_statistics=true")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(TestcontainersConfiguration.class)
@@ -123,7 +119,6 @@ class SolicitacaoRepositoryTest {
         assertThat(cards).hasSize((int) contar("solicitacao"));
         assertThat(statistics.getPrepareStatementCount()).isEqualTo(1);
 
-        // Checklist de todos os cards num único SELECT extra (default_batch_fetch_size), não um por card.
         cards.forEach(s -> s.getDocumentos().size());
         assertThat(statistics.getPrepareStatementCount()).isEqualTo(2);
     }

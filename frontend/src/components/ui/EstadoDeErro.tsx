@@ -7,7 +7,6 @@ interface EstadoDeErroProps {
   aoTentarNovamente?: () => void;
 }
 
-/** Falha ao carregar dados: mensagem do servidor, código para o suporte e "Tentar novamente". */
 export function EstadoDeErro({
   titulo = 'Não foi possível carregar as informações.',
   erro,

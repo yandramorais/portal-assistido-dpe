@@ -5,11 +5,6 @@ import { queryClient } from '../../lib/queryClient';
 import { sessao } from '../../lib/sessao';
 import { AuthContext, type AuthContexto } from './auth-context';
 
-/**
- * Sessão do usuário. O token fica em memória e no sessionStorage (lib/sessao);
- * nome, id e perfil vêm das claims do JWT. A sessão termina sozinha quando o
- * token expira ou quando a API responde 401.
- */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const token = useSyncExternalStore(sessao.inscrever, sessao.obterToken);
   const claims = useMemo(() => (token ? lerClaims(token) : null), [token]);
@@ -26,12 +21,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     sessao.iniciar(novoToken);
   }, []);
 
-  // Dados em cache são do usuário anterior: limpa ao trocar de sessão.
   useEffect(() => {
     if (!token) queryClient.clear();
   }, [token]);
 
-  // Logout automático no instante em que o token expira.
   useEffect(() => {
     if (!claims) return;
     const restante = claims.exp * 1000 - Date.now();

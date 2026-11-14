@@ -16,7 +16,6 @@ public interface NotificacaoEmailRepository extends JpaRepository<NotificacaoEma
 
     List<NotificacaoEmail> findBySolicitacaoIdOrderByCriadoEm(Long solicitacaoId);
 
-    /** Solicitação no mesmo SELECT para mostrar o protocolo sem N+1. */
     @EntityGraph(attributePaths = "solicitacao")
     Page<NotificacaoEmail> findByStatus(StatusNotificacao status, Pageable pageable);
 

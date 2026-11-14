@@ -2,7 +2,6 @@ import { dataHora } from '../shared/datas';
 import { ROTULO_STATUS } from '../shared/rotulos';
 import type { HistoricoItem } from '../shared/tipos';
 
-/** Histórico do pedido, do mais antigo ao mais recente. */
 export function LinhaDoTempo({ historico }: { historico: HistoricoItem[] }) {
   if (historico.length === 0) {
     return <p className="text-sm text-neutral-600">Ainda não há movimentações.</p>;

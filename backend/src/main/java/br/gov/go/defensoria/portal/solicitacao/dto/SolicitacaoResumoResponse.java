@@ -6,7 +6,6 @@ import br.gov.go.defensoria.portal.solicitacao.domain.AreaAtuacao;
 import br.gov.go.defensoria.portal.solicitacao.domain.Solicitacao;
 import br.gov.go.defensoria.portal.solicitacao.domain.StatusSolicitacao;
 
-/** Linha da lista "Meus pedidos". */
 public record SolicitacaoResumoResponse(
         String protocolo,
         String assunto,

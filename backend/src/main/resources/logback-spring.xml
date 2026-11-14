@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Log em texto para o console (docker compose logs). Cada linha traz o requestId e o id do
-  usuário, que vêm do MDC (RequestIdFilter), para o suporte achar tudo de uma requisição:
-    docker compose logs backend | grep 3f9c2a1b7d4e
 
-  Nunca logar CPF, e-mail completo nem relato: nos services, logue protocolo e ids.
--->
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 

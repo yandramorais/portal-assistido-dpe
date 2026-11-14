@@ -1,21 +1,15 @@
 import type { Perfil, UsuarioLogado } from '../features/auth/types';
 
-/** Claims emitidas pelo backend (JwtService). */
 export interface ClaimsPortal {
   sub: string;
   nome: string;
   perfil: Perfil;
-  /** Expiração em segundos desde 1970 (padrão JWT). */
   exp: number;
   iat?: number;
 }
 
 const PERFIS: readonly Perfil[] = ['ASSISTIDO', 'SERVIDOR', 'DEFENSOR'];
 
-/**
- * Lê o payload do JWT. Não confere a assinatura: quem valida o token é o backend.
- * Devolve null se o token estiver mal formado ou sem as claims esperadas.
- */
 export function lerClaims(token: string): ClaimsPortal | null {
   try {
     const payload = token.split('.')[1];
@@ -24,7 +18,6 @@ export function lerClaims(token: string): ClaimsPortal | null {
     const bytes = Uint8Array.from(atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')), (c) =>
       c.charCodeAt(0),
     );
-    // TextDecoder para os acentos dos nomes (o payload é UTF-8).
     const claims = JSON.parse(new TextDecoder().decode(bytes)) as Partial<ClaimsPortal>;
     if (
       typeof claims.sub !== 'string' ||

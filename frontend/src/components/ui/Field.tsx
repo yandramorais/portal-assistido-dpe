@@ -4,13 +4,10 @@ import { cn } from '../../lib/cn';
 
 interface FieldProps {
   label: string;
-  /** Mensagem de erro do campo; quando presente, o campo fica marcado como inválido. */
   erro?: string;
-  /** Texto de ajuda abaixo do campo. */
   dica?: ReactNode;
   obrigatorio?: boolean;
   className?: string;
-  /** Um único Input, Select ou Textarea. */
   children: ReactElement<{
     id?: string;
     'aria-invalid'?: boolean;
@@ -19,10 +16,6 @@ interface FieldProps {
   }>;
 }
 
-/**
- * Label + campo + dica + erro, já ligados para leitores de tela
- * (htmlFor, aria-invalid e aria-describedby).
- */
 export function Field({ label, erro, dica, obrigatorio, className, children }: FieldProps) {
   const base = useId();
   const id = children.props.id ?? `${base}-campo`;

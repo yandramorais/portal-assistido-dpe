@@ -17,10 +17,6 @@ const estilos: Record<TipoToast, string> = {
   info: 'border-neutral-200 bg-white text-neutral-800',
 };
 
-/**
- * Avisos no canto da tela. Sucesso e informação são anunciados de forma educada
- * (aria-live polite); erros, de forma imediata (role="alert"). Somem sozinhos em 5 s.
- */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastAtivo[]>([]);
   const proximoId = useRef(1);

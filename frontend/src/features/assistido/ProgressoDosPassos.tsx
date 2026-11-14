@@ -2,11 +2,9 @@ import { cn } from '../../lib/cn';
 
 interface ProgressoDosPassosProps {
   passos: readonly string[];
-  /** Índice do passo atual (0, 1, 2…). */
   atual: number;
 }
 
-/** Barra de progresso do cadastro: passos numerados e "Passo X de N" para leitores de tela. */
 export function ProgressoDosPassos({ passos, atual }: ProgressoDosPassosProps) {
   const percentual = ((atual + 1) / passos.length) * 100;
   return (

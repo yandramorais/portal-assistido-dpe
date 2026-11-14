@@ -15,7 +15,6 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 
-/** Filtros do kanban. Filtro nulo/vazio não restringe nada. */
 public final class SolicitacaoSpecifications {
 
     private static final char ESCAPE = '\\';
@@ -23,10 +22,6 @@ public final class SolicitacaoSpecifications {
     private SolicitacaoSpecifications() {
     }
 
-    /**
-     * Traz assistido, unidade e responsável no mesmo SELECT (sem N+1). Ignorado na consulta
-     * de contagem da paginação, onde fetch não é permitido.
-     */
     public static Specification<Solicitacao> comDadosDoCard() {
         return (root, query, cb) -> {
             Class<?> resultado = query.getResultType();
@@ -55,10 +50,6 @@ public final class SolicitacaoSpecifications {
         return prioridade == null ? null : (root, query, cb) -> cb.equal(root.get("prioridade"), prioridade);
     }
 
-    /**
-     * Busca livre: parte do nome ou do nome social (sem diferenciar maiúsculas), do protocolo,
-     * ou dos dígitos do CPF (aceita com ou sem máscara).
-     */
     public static Specification<Solicitacao> comBusca(String termo) {
         if (!StringUtils.hasText(termo)) {
             return null;
@@ -83,7 +74,6 @@ public final class SolicitacaoSpecifications {
         };
     }
 
-    /** %termo% com os curingas do LIKE escapados. */
     private static String contendo(String termo) {
         String escapado = termo.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
         return "%" + escapado + "%";

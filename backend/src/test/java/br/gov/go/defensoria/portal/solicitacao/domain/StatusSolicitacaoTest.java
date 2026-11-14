@@ -19,7 +19,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
-/** Confere os 49 pares (7 x 7) contra a tabela de fluxo, escrita aqui de forma independente do enum. */
 class StatusSolicitacaoTest {
 
     private static final Set<String> TRANSICOES_VALIDAS = Set.of(

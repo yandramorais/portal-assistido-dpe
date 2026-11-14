@@ -23,7 +23,6 @@ public class JwtService {
     public record TokenEmitido(String valor, Instant expiraEm) {
     }
 
-    /** Token HS256 com sub = id do usuário, nome e perfil. */
     public TokenEmitido gerar(Usuario usuario) {
         Instant agora = Instant.now();
         Instant expiraEm = agora.plus(properties.expiracao());

@@ -18,11 +18,6 @@ import br.gov.go.defensoria.portal.workflow.service.TransicaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Conversa do pedido. O assistido só escreve nos próprios pedidos e sempre de forma visível;
- * se o pedido estava pendente de documentação, a resposta dele o devolve para análise.
- * A equipe escreve em qualquer pedido e pode deixar nota interna.
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -43,7 +38,6 @@ public class MensagemService {
         String conteudo = request.conteudo().trim();
 
         if (autor.getPerfil() == Perfil.ASSISTIDO) {
-            // Pedido de outro assistido responde 404, igual a protocolo inexistente.
             Solicitacao solicitacao = solicitacaoRepository.findByProtocoloAndAssistidoUsuarioId(protocolo, usuarioId)
                     .orElseThrow(() -> new NaoEncontradoException(NAO_ENCONTRADA));
             Mensagem mensagem = mensagemRepository.save(new Mensagem(solicitacao, autor, conteudo, true));

@@ -6,7 +6,6 @@ import br.gov.go.defensoria.portal.auth.domain.Perfil;
 import br.gov.go.defensoria.portal.solicitacao.domain.StatusSolicitacao;
 import br.gov.go.defensoria.portal.workflow.domain.Mensagem;
 
-/** @param statusSolicitacao status do pedido depois da mensagem (muda se a resposta reabriu o pedido) */
 public record MensagemResponse(
         Long id,
         String autor,

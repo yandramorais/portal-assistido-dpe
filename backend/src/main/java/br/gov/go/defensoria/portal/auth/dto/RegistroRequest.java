@@ -18,7 +18,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
-/** Cadastro do assistido: cria o login (perfil ASSISTIDO) e a ficha socioeconômica. */
 @Schema(description = "Cadastro do assistido (login e ficha socioeconômica)")
 public record RegistroRequest(
         @Schema(example = "Ana Paula Ribeiro") @NotBlank @Size(max = 150) String nome,
@@ -29,7 +28,6 @@ public record RegistroRequest(
         @Schema(example = "1985-04-10") @NotNull @Past LocalDate dataNascimento,
         @Schema(example = "62999990000") @NotBlank @Size(max = 20) String telefone,
         @Schema(example = "ana.ribeiro@exemplo.com") @NotBlank @Email @Size(max = 150) String email,
-        // BCrypt considera só os primeiros 72 bytes.
         @Schema(description = "De 8 a 72 caracteres", example = "SenhaForte#1")
         @NotBlank @Size(min = 8, max = 72) String senha,
         @Schema(example = "74000-000") @Pattern(regexp = "\\d{5}-?\\d{3}", message = "CEP inválido") String cep,

@@ -4,7 +4,6 @@ import { cn } from '../../lib/cn';
 
 interface CardProps {
   titulo?: ReactNode;
-  /** Botões ou links alinhados à direita do título. */
   acoes?: ReactNode;
   className?: string;
   children: ReactNode;

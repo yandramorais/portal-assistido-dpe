@@ -1,6 +1,5 @@
 import { Spinner } from './Spinner';
 
-/** Bloco de carregamento de página ou seção. */
 export function Carregando({ texto = 'Carregando…' }: { texto?: string }) {
   return (
     <div className="flex items-center gap-2 py-8 text-sm text-neutral-600">

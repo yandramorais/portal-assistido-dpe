@@ -96,7 +96,6 @@ public class Solicitacao {
     @Column(name = "motivo_indeferimento", columnDefinition = "text")
     private String motivoIndeferimento;
 
-    /** Checklist de documentos: tipo -> entregue. */
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "solicitacao_documento", joinColumns = @JoinColumn(name = "solicitacao_id"))
     @MapKeyEnumerated(EnumType.STRING)

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-/** Marca documentos do checklist como entregues (true) ou pendentes (false). Só os tipos enviados mudam. */
 @Schema(description = "Atualização do checklist de documentos")
 public record AtualizarDocumentosRequest(
         @Schema(description = "Versão do pedido que a tela carregou (lock otimista)", example = "0")

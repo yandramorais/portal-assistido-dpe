@@ -5,7 +5,6 @@ import { cn } from '../../lib/cn';
 interface EmptyStateProps {
   titulo: string;
   descricao?: ReactNode;
-  /** Ação principal, ex.: botão "Fazer um pedido". */
   acao?: ReactNode;
   className?: string;
 }
