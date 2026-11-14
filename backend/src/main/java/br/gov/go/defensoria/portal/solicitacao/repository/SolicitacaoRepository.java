@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -32,7 +35,13 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long>,
 
     Optional<Solicitacao> findByProtocolo(String protocolo);
 
-    List<Solicitacao> findByAssistidoIdOrderByCriadoEmDesc(Long assistidoId);
+    /** "Meus pedidos": unidade no mesmo SELECT para a lista não fazer N+1. */
+    @EntityGraph(attributePaths = "unidade")
+    Page<Solicitacao> findByAssistidoId(Long assistidoId, Pageable pageable);
+
+    /** Só encontra se o pedido for do assistido ligado a este usuário. */
+    @EntityGraph(attributePaths = "unidade")
+    Optional<Solicitacao> findByProtocoloAndAssistidoUsuarioId(String protocolo, Long usuarioId);
 
     /** Próximo número da sequência usada no protocolo (DPE-AAAA-NNNNNN). */
     @Query(value = "select nextval('protocolo_seq')", nativeQuery = true)
