@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: portal
+
+  # Por enquanto o banco fica desligado no profile padrão para a aplicação subir
+  # sem tabelas. Para ligar, remova esta lista de exclusões e o liquibase.enabled=false.
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:portal}
+    username: ${DB_USER:portal}
+    password: ${DB_PASSWORD:portal}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+  liquibase:
+    enabled: false
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+
+portal:
+  jwt:
+    # HS256 exige segredo de pelo menos 32 bytes.
+    secret: ${JWT_SECRET:dev-secret-troque-em-producao-0123456789abcdef}
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  health:
+    db:
+      enabled: false
+    mail:
+      enabled: false
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
