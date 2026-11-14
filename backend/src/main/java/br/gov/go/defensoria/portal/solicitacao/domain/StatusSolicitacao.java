@@ -9,18 +9,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/**
- * Status do pedido e o fluxo permitido entre eles.
- *
- * <pre>
- * AGUARDANDO_TRIAGEM    -> EM_ANALISE
- * EM_ANALISE            -> PENDENTE_DOCUMENTACAO, DEFERIDO, ENCAMINHADO, INDEFERIDO
- * PENDENTE_DOCUMENTACAO -> EM_ANALISE (assistido respondeu), INDEFERIDO (não entregou)
- * DEFERIDO              -> CONCLUIDO
- * INDEFERIDO            -> EM_ANALISE (pedido de revisão)
- * ENCAMINHADO, CONCLUIDO: finais
- * </pre>
- */
 @Getter
 @RequiredArgsConstructor
 public enum StatusSolicitacao {

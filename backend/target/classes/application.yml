@@ -12,16 +12,12 @@ spring:
     hibernate:
       ddl-auto: validate
     properties:
-      # Coleções LAZY (ex.: checklist de documentos dos cards) carregadas em lote, não uma a uma.
       hibernate.default_batch_fetch_size: 50
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    # Sem context explícito o Liquibase roda TODOS os changesets, inclusive o seed (context:dev).
-    # O profile dev sobrescreve com "dev".
     contexts: default
 
-  # Mensagens de validação sempre em pt-BR, independente do Accept-Language.
   web:
     locale: pt_BR
     locale-resolver: fixed
@@ -29,8 +25,6 @@ spring:
   mail:
     host: ${MAIL_HOST:localhost}
     port: ${MAIL_PORT:1025}
-    # Sem timeout o JavaMail espera para sempre se o SMTP cair, prendendo as threads do @Async
-    # e sem nunca gravar a FALHA. Com 5 s o envio falha e fica registrado em notificacao_email.
     properties:
       mail.smtp.connectiontimeout: 5000
       mail.smtp.timeout: 5000
@@ -38,7 +32,6 @@ spring:
 
 portal:
   jwt:
-    # HS256 exige segredo de pelo menos 32 bytes.
     secret: ${JWT_SECRET:dev-secret-troque-em-producao-0123456789abcdef}
     expiracao: 8h
   frontend-url: ${FRONTEND_URL:http://localhost:5173}
@@ -49,7 +42,6 @@ dpe:
   salario-minimo: 1621.00
   limite-salarios: 3
 
-# Actuator: só health (status UP/DOWN, sem detalhes) e info (nome e versão). Nada de env, beans etc.
 management:
   endpoints:
     web:
@@ -73,7 +65,6 @@ info:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-    # Mantém o token do "Authorize" ao recarregar a página.
     persist-authorization: true
     tags-sorter: alpha
     operations-sorter: method

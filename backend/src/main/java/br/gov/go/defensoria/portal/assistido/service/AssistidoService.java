@@ -19,7 +19,6 @@ public class AssistidoService {
 
     private final AssistidoRepository assistidoRepository;
 
-    /** Ficha do assistido ligada ao usuário logado. Deve ser chamado dentro de uma transação. */
     public Assistido obterPorUsuario(Long usuarioId) {
         return assistidoRepository.findByUsuarioId(usuarioId)
                 .orElseThrow(() -> new NaoEncontradoException("Cadastro de assistido não encontrado."));
@@ -53,7 +52,6 @@ public class AssistidoService {
         assistido.getVulnerabilidades().clear();
         assistido.getVulnerabilidades().addAll(request.vulnerabilidades());
 
-        // Nome exibido no sistema (token, telas da equipe) respeita o nome social.
         assistido.getUsuario().setNome(nomeSocial != null ? nomeSocial : assistido.getNome());
 
         return AssistidoResponse.de(assistido);

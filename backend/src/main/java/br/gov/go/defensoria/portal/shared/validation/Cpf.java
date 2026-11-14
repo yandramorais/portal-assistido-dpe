@@ -14,11 +14,6 @@ import java.lang.annotation.Target;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-/**
- * CPF válido: 11 dígitos (com ou sem máscara 000.000.000-00), não repetidos e com
- * os dois dígitos verificadores corretos. Nulo é considerado válido; use @NotBlank
- * para exigir o campo.
- */
 @Documented
 @Constraint(validatedBy = CpfValidator.class)
 @Target({ FIELD, METHOD, PARAMETER, ANNOTATION_TYPE, TYPE_USE })

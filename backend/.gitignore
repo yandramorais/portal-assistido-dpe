@@ -1,4 +1,3 @@
-# Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
 pom.xml.tag
@@ -10,7 +9,6 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
-# IDE
 .idea/
 *.iml
 .classpath
@@ -19,5 +17,4 @@ buildNumber.properties
 .factorypath
 .vscode/
 
-# Logs
 *.log

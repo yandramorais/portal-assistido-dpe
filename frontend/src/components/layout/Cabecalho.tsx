@@ -24,7 +24,6 @@ function menuDo(usuario: UsuarioLogado): ItemMenu[] {
   return ehEquipe(usuario.perfil) ? MENU_EQUIPE : MENU_ASSISTIDO;
 }
 
-/** Faixa institucional (sem logotipo oficial) + menu conforme o perfil. */
 export function Cabecalho() {
   const { usuario, sair } = useAuth();
 

@@ -4,10 +4,6 @@ import { dataPorExtenso, hora } from '../shared/datas';
 import { ROTULO_MODALIDADE } from '../shared/rotulos';
 import type { SolicitacaoDetalhe } from '../shared/tipos';
 
-/**
- * Resultado da análise, conforme o status: agendamento (data, hora e local),
- * encaminhamento (destino) ou indeferimento (motivo). Nos demais status não aparece.
- */
 export function BlocoDaDecisao({ pedido }: { pedido: SolicitacaoDetalhe }) {
   const agendado =
     (pedido.status === 'DEFERIDO' || pedido.status === 'CONCLUIDO') && pedido.dataAgendamento;

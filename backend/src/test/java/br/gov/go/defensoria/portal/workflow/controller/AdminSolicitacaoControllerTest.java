@@ -40,7 +40,6 @@ import br.gov.go.defensoria.portal.notificacao.event.SolicitacaoAtualizadaEvent;
 import br.gov.go.defensoria.portal.shared.exception.ConflitoVersaoException;
 import br.gov.go.defensoria.portal.solicitacao.domain.StatusSolicitacao;
 
-/** Mudança de status pela equipe, contra o seed. Cada teste faz rollback, então o e-mail (AFTER_COMMIT) não sai. */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
@@ -120,7 +119,6 @@ class AdminSolicitacaoControllerTest {
     @MethodSource("transicoesForaDoFluxo")
     void transicaoForaDoFluxoDevolve422(StatusSolicitacao origem, String destino) throws Exception {
         String protocolo = protocoloEm(origem);
-        // Campos de todos os destinos preenchidos: o 422 tem que vir do fluxo, não da falta de campo.
         Map<String, Object> todosOsCampos = Map.of(
                 "dataAgendamento", Instant.now().plus(Duration.ofDays(3)).toString(),
                 "localAtendimento", "Sede", "destino", "Procon", "motivo", "Motivo", "devolutiva", "Texto");
@@ -166,7 +164,6 @@ class AdminSolicitacaoControllerTest {
         String protocolo = protocoloEm(StatusSolicitacao.AGUARDANDO_TRIAGEM);
         int versaoCarregadaPelaTela = versaoDe(protocolo);
 
-        // Outra pessoa mexe no checklist e a versão sobe.
         mvc.perform(patch("/api/admin/solicitacoes/{p}/documentos", protocolo)
                 .header("Authorization", bearer(mvc, DEFENSOR))
                 .contentType(MediaType.APPLICATION_JSON)

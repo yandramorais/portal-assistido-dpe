@@ -30,10 +30,6 @@ import com.jayway.jsonpath.JsonPath;
 
 import br.gov.go.defensoria.portal.TestcontainersConfiguration;
 
-/**
- * Acesso do assistido aos pedidos, contra o seed. Maria (CPF 52601815906, 68 anos) e
- * João (CPF 08301661305) são assistidos diferentes.
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
@@ -53,12 +49,10 @@ class SolicitacaoControllerTest {
     void assistidoNaoEnxergaPedidoDeOutroAssistido() throws Exception {
         String protocoloDoJoao = protocolosDe("08301661305").getFirst();
 
-        // Dono enxerga.
         mvc.perform(get("/api/solicitacoes/{p}", protocoloDoJoao).header("Authorization", bearer(JOAO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.protocolo").value(protocoloDoJoao));
 
-        // Maria recebe o mesmo 404 de um protocolo que não existe.
         String bearerMaria = bearer(MARIA);
         String deOutro = mvc.perform(get("/api/solicitacoes/{p}", protocoloDoJoao).header("Authorization", bearerMaria))
                 .andExpect(status().isNotFound())
@@ -72,7 +66,6 @@ class SolicitacaoControllerTest {
         }
         assertThat((String) JsonPath.read(deOutro, "$.detail")).isEqualTo("Solicitação não encontrada.");
 
-        // E o pedido do João não aparece em "minhas" da Maria.
         String minhasMaria = mvc.perform(get("/api/solicitacoes/minhas?size=50").header("Authorization", bearerMaria))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -83,7 +76,6 @@ class SolicitacaoControllerTest {
 
     @Test
     void assistidoNuncaRecebeMensagemInterna() throws Exception {
-        // Pedido do João (Família, pendente de documentação) tem uma nota interna no seed.
         String protocolo = jdbc.queryForObject("""
                 select s.protocolo from solicitacao s join assistido a on a.id = s.assistido_id
                 where a.cpf = '08301661305' and s.area = 'FAMILIA' and s.status = 'PENDENTE_DOCUMENTACAO'
@@ -127,7 +119,6 @@ class SolicitacaoControllerTest {
 
     @Test
     void rendaAcimaDoLimiteSemVulnerabilidadeENormalERequerAnalise() throws Exception {
-        // Carlos: 47 anos, renda individual 6.200,00, sem vulnerabilidade.
         novaSolicitacao("carlos@exemplo.com", "[]")
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.prioridade").value("NORMAL"))

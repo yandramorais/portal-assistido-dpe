@@ -6,7 +6,6 @@ import { Spinner } from './Spinner';
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variante?: VarianteBotao;
   tamanho?: TamanhoBotao;
-  /** Mostra o indicador de progresso e bloqueia novos cliques. */
   carregando?: boolean;
 }
 

@@ -34,7 +34,6 @@ import com.jayway.jsonpath.JsonPath;
 import br.gov.go.defensoria.portal.TestcontainersConfiguration;
 import br.gov.go.defensoria.portal.shared.web.RequestIdFilter;
 
-/** Formato dos erros (ProblemDetail + requestId) que o suporte N2 recebe dos usuários. */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import({ TestcontainersConfiguration.class, GlobalExceptionHandlerTest.EndpointQueQuebra.class })
@@ -46,7 +45,6 @@ class GlobalExceptionHandlerTest {
     private static final String PROBLEM_JSON = "application/problem+json";
     private static final String SEGREDO_INTERNO = "detalhe-interno-que-nao-pode-vazar";
 
-    /** Só existe nos testes: provoca um erro inesperado (500). */
     @RestController
     static class EndpointQueQuebra {
         @GetMapping("/api/teste/erro-inesperado")
@@ -134,7 +132,6 @@ class GlobalExceptionHandlerTest {
                 .isEqualTo("Não foi possível concluir a operação. Informe ao suporte o código " + requestId + ".");
         assertThat(corpo).doesNotContain(SEGREDO_INTERNO).doesNotContain("IllegalStateException");
 
-        // No log: linha ERROR com o requestId e a stack completa.
         assertThat(log.getOut()).contains("ERROR [" + requestId + "]")
                 .contains("Erro inesperado em GET /api/teste/erro-inesperado")
                 .contains("java.lang.IllegalStateException: " + SEGREDO_INTERNO)

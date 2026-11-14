@@ -28,7 +28,6 @@ import com.jayway.jsonpath.JsonPath;
 import br.gov.go.defensoria.portal.TestcontainersConfiguration;
 import br.gov.go.defensoria.portal.solicitacao.domain.StatusSolicitacao;
 
-/** Kanban, indicadores e log de e-mails da equipe, conferidos contra o próprio banco do seed. */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
@@ -36,7 +35,6 @@ import br.gov.go.defensoria.portal.solicitacao.domain.StatusSolicitacao;
 @Transactional
 class KanbanControllerTest {
 
-    /** Rafaela Costa usa o nome social "Rafael Costa". */
     private static final String CPF_RAFAEL = "93786579741";
 
     @Autowired
@@ -123,7 +121,6 @@ class KanbanControllerTest {
 
     @Test
     void documentosPendentesDoCard() throws Exception {
-        // No seed, quem aguarda triagem só entregou identificação e comprovante de residência.
         String kanban = kanban("");
         List<List<String>> pendentes = JsonPath.read(kanban,
                 "$.colunas[?(@.status == 'AGUARDANDO_TRIAGEM')].cards[*].documentosPendentes");

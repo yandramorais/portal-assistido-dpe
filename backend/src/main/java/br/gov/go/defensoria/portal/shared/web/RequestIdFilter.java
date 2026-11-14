@@ -18,14 +18,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- * Identificador de correlação de cada requisição. Reaproveita o X-Request-Id recebido (ex.: o
- * $request_id do nginx) se for seguro para log; senão gera um curto. Fica no MDC durante a
- * requisição, volta no header da resposta e entra em todo ProblemDetail, para o usuário
- * informar ao suporte.
- *
- * <p>Roda antes do Spring Security, então 401 e 403 também levam o header.
- */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RequestIdFilter extends OncePerRequestFilter {
@@ -34,7 +26,6 @@ public class RequestIdFilter extends OncePerRequestFilter {
     public static final String MDC_REQUEST_ID = "requestId";
     public static final String MDC_USUARIO = "usuario";
 
-    /** Só letras, dígitos, hífen e sublinhado: nada de quebra de linha ou texto forjado no log. */
     private static final Pattern ID_SEGURO = Pattern.compile("[A-Za-z0-9_-]{1,64}");
 
     @Override
@@ -51,7 +42,6 @@ public class RequestIdFilter extends OncePerRequestFilter {
         }
     }
 
-    /** requestId da requisição atual (ou da tarefa @Async que herdou o MDC). */
     public static String atual() {
         return MDC.get(MDC_REQUEST_ID);
     }
@@ -63,10 +53,6 @@ public class RequestIdFilter extends OncePerRequestFilter {
         return UUID.randomUUID().toString().replace("-", "").substring(0, 12);
     }
 
-    /**
-     * Coloca no MDC o id do usuário autenticado (sub do JWT), nunca e-mail ou nome. Precisa rodar
-     * depois do filtro que valida o token, por isso é registrado no SecurityConfig e não como bean.
-     */
     public static class UsuarioNoMdc extends OncePerRequestFilter {
 
         @Override

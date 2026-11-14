@@ -17,7 +17,6 @@ const esquema = z.object({
 
 type DadosLogin = z.infer<typeof esquema>;
 
-/** Login de assistidos e da equipe. O redirecionamento após entrar fica com SomenteVisitante. */
 export function LoginPage() {
   useTituloDaPagina('Entrar');
   const { entrar, sessaoExpirada } = useAuth();

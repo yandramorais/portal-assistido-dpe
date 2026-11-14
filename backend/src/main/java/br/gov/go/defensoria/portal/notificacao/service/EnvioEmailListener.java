@@ -20,13 +20,6 @@ import br.gov.go.defensoria.portal.notificacao.repository.NotificacaoEmailReposi
 import br.gov.go.defensoria.portal.solicitacao.repository.SolicitacaoRepository;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Avisa o assistido por e-mail quando o status do pedido muda. Roda só depois do commit
- * (nada de e-mail para mudança desfeita) e fora da thread da requisição. O resultado fica
- * em notificacao_email (ENVIADO ou FALHA com o erro) para a equipe investigar.
- *
- * <p>O e-mail traz só protocolo, status e link: nunca o relato ou dados do caso.
- */
 @Slf4j
 @Component
 public class EnvioEmailListener {
@@ -72,8 +65,6 @@ public class EnvioEmailListener {
             notificacao.setEnviadoEm(Instant.now(clock));
             log.info("E-mail de atualização: protocolo={} status={}", evento.protocolo(), StatusNotificacao.ENVIADO);
         } catch (RuntimeException e) {
-            // A mensagem da exceção pode conter o endereço do destinatário: no log só a classe.
-            // O texto completo fica em notificacao_email.erro, visível só para a equipe.
             log.warn("E-mail de atualização: protocolo={} status={} erro={}", evento.protocolo(),
                     StatusNotificacao.FALHA, e.getClass().getSimpleName());
             notificacao.setStatus(StatusNotificacao.FALHA);

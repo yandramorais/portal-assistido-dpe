@@ -6,12 +6,6 @@ import { cpfValido } from '../../lib/cpf';
 import { apenasDigitos, paraNumero, valorMonetarioValido } from '../../lib/mascaras';
 import type { Vulnerabilidade } from '../solicitacoes/shared/tipos';
 
-/**
- * Validação do cadastro, espelhando o RegistroRequest do backend (tamanhos, CPF com dígito
- * verificador, data no passado, senha de 8 a 72). Um esquema por passo, para validar só o
- * que está na tela; os dados dos outros passos continuam no mesmo formulário.
- */
-
 const ate = (maximo: number) =>
   z.string().trim().max(maximo, `Use no máximo ${maximo} caracteres.`);
 
@@ -90,10 +84,6 @@ export const esquemaPasso3 = z.object({
   vulnerabilidades: z.array(z.string()),
 });
 
-/**
- * Um resolver por passo, todos com o tipo do formulário inteiro: cada um só valida (e só
- * aponta erros) nos campos do seu passo.
- */
 export const RESOLVERS_POR_PASSO: ReadonlyArray<Resolver<DadosCadastro>> = [
   zodResolver(esquemaPasso1) as unknown as Resolver<DadosCadastro>,
   zodResolver(esquemaPasso2) as unknown as Resolver<DadosCadastro>,
@@ -163,7 +153,6 @@ export const VALORES_INICIAIS: DadosCadastro = {
 
 const vazioParaNulo = (valor: string) => (valor.trim() === '' ? null : valor.trim());
 
-/** Converte o formulário no corpo de POST /api/auth/registro (só dígitos em CPF, telefone e CEP). */
 export function paraRegistro(d: DadosCadastro) {
   return {
     nome: d.nome.trim(),

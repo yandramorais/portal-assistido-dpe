@@ -7,10 +7,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Relógio da aplicação no fuso de Goiás: idade do assistido e ano do protocolo usam a data local.
- * Injetável para que os testes fixem o "hoje".
- */
 @Configuration
 @EnableConfigurationProperties(DpeProperties.class)
 public class ClockConfig {

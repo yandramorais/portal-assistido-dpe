@@ -28,7 +28,6 @@ import com.jayway.jsonpath.JsonPath;
 import br.gov.go.defensoria.portal.TestcontainersConfiguration;
 import br.gov.go.defensoria.portal.auth.repository.UsuarioRepository;
 
-/** Fluxo HTTP completo contra o Postgres do Testcontainers com o seed (senha de todos: Senha@123). */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
@@ -74,7 +73,6 @@ class AuthControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andReturn().getResponse().getContentAsString();
 
-        // Mesmo corpo nos dois casos; só o requestId (um por requisição) muda.
         for (String campo : java.util.List.of("$.type", "$.title", "$.status", "$.detail", "$.instance")) {
             assertThat((Object) JsonPath.read(emailInexistente, campo)).as(campo)
                     .isEqualTo(JsonPath.read(senhaErrada, campo));
@@ -93,7 +91,6 @@ class AuthControllerTest {
 
     @Test
     void registroComCpfDuplicadoDevolve409() throws Exception {
-        // CPF da Maria Aparecida no seed, com máscara.
         registro("526.018.159-06", "outro@exemplo.com")
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.detail").value("Já existe cadastro com este CPF."))
@@ -122,7 +119,6 @@ class AuthControllerTest {
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.title").value("Acesso negado"));
 
-        // A equipe passa pela segurança (404 só porque a rota ainda não existe).
         mvc.perform(get("/api/admin/solicitacoes").header("Authorization", bearer("servidor@dpe.local")))
                 .andExpect(status().isNotFound());
     }

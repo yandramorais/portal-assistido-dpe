@@ -12,7 +12,6 @@ import br.gov.go.defensoria.portal.notificacao.dto.NotificacaoResponse;
 import br.gov.go.defensoria.portal.notificacao.repository.NotificacaoEmailRepository;
 import lombok.RequiredArgsConstructor;
 
-/** Log de e-mails para a equipe investigar falhas de envio. */
 @Service
 @RequiredArgsConstructor
 public class NotificacaoService {

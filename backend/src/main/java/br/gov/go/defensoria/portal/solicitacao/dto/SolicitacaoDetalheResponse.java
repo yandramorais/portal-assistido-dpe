@@ -16,7 +16,6 @@ import br.gov.go.defensoria.portal.unidade.dto.UnidadeResponse;
 import br.gov.go.defensoria.portal.workflow.domain.HistoricoStatus;
 import br.gov.go.defensoria.portal.workflow.domain.Mensagem;
 
-/** Pedido como o assistido enxerga: sem notas internas da equipe. */
 public record SolicitacaoDetalheResponse(
         String protocolo,
         AreaAtuacao area,
@@ -58,7 +57,6 @@ public record SolicitacaoDetalheResponse(
         }
     }
 
-    /** {@code mensagens} já deve vir filtrada (só visíveis ao assistido). */
     public static SolicitacaoDetalheResponse de(Solicitacao s, List<HistoricoStatus> historico,
             List<Mensagem> mensagens) {
         List<DocumentoItem> documentos = Arrays.stream(TipoDocumento.values())

@@ -11,10 +11,6 @@ import br.gov.go.defensoria.portal.assistido.domain.Vulnerabilidade;
 import br.gov.go.defensoria.portal.solicitacao.domain.Prioridade;
 import lombok.RequiredArgsConstructor;
 
-/**
- * Prioridade ALTA para pessoa idosa (60 anos ou mais, Estatuto da Pessoa Idosa)
- * ou com qualquer vulnerabilidade declarada; NORMAL nos demais casos.
- */
 @Component
 @RequiredArgsConstructor
 public class CalculadoraPrioridade {

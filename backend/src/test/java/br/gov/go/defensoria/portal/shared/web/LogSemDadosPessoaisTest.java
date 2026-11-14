@@ -25,10 +25,6 @@ import com.jayway.jsonpath.JsonPath;
 
 import br.gov.go.defensoria.portal.TestcontainersConfiguration;
 
-/**
- * Percorre o fluxo inteiro (cadastro, login errado, duplicidade, pedido, triagem, mensagem) e
- * confere que os logs de negócio aparecem sem CPF, e-mail, nome ou relato.
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)

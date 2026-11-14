@@ -1,10 +1,5 @@
 import { sessao } from './sessao';
 
-/**
- * Único ponto de chamadas HTTP do front. Envia o token, converte o ProblemDetail
- * (RFC 9457) do backend em ApiError e encerra a sessão quando o token deixa de valer (401).
- */
-
 const BASE = '/api';
 
 export interface ErroCampo {
@@ -27,13 +22,9 @@ interface ProblemDetail {
 export class ApiError extends Error {
   readonly status: number;
   readonly titulo: string;
-  /** Código da requisição para o usuário informar ao suporte. */
   readonly requestId?: string;
-  /** Erros de validação por campo (400). */
   readonly erros: ErroCampo[];
-  /** Campos que faltam numa mudança de status (422). */
   readonly campos: string[];
-  /** Campo que causou um conflito (409), ex.: "email" ou "cpf" no cadastro. */
   readonly campo?: string;
 
   constructor(dados: {
@@ -55,7 +46,6 @@ export class ApiError extends Error {
     this.campo = dados.campo;
   }
 
-  /** Mensagem do campo vinda do servidor, para mostrar junto ao campo no formulário. */
   erroDoCampo(campo: string): string | undefined {
     return this.erros.find((e) => e.campo === campo)?.mensagem;
   }
@@ -77,9 +67,7 @@ async function paraApiError(resposta: Response): Promise<ApiError> {
   let corpo: ProblemDetail = {};
   try {
     corpo = (await resposta.json()) as ProblemDetail;
-  } catch {
-    // Corpo vazio ou não JSON (ex.: erro do proxy).
-  }
+  } catch {}
   return new ApiError({
     status: resposta.status,
     titulo: corpo.title ?? 'Erro',
@@ -126,8 +114,6 @@ async function requisicao<T>(
     });
   }
 
-  // 401 com token = token vencido ou inválido: encerra a sessão (as rotas levam ao /entrar).
-  // Sem token (ex.: senha errada no login) o 401 é só um erro comum.
   if (resposta.status === 401 && token) {
     sessao.encerrar('expirou');
   }
@@ -153,10 +139,6 @@ export const api = {
     requisicao<T>('DELETE', caminho, undefined, opcoes),
 };
 
-/**
- * Texto para mostrar ao usuário. Inclui o código da requisição quando houver, para ele
- * informar à Central de Informações.
- */
 export function mensagemDoErro(erro: unknown): string {
   if (erro instanceof ApiError) {
     if (erro.requestId && !erro.message.includes(erro.requestId)) {

@@ -17,12 +17,10 @@ class CalculadoraPrioridadeTest {
 
     private static final ZoneId GOIANIA = ZoneId.of("America/Sao_Paulo");
 
-    /** "Hoje" = 14/11/2026 ao meio-dia em Goiânia. */
     private final CalculadoraPrioridade calculadora = calculadoraEm("2026-11-14T15:00:00Z");
 
     @Test
     void cinquentaENoveAnosSemVulnerabilidadeENormal() {
-        // Faz 60 amanhã.
         assertThat(calculadora.calcular(LocalDate.of(1966, 11, 15), Set.of())).isEqualTo(Prioridade.NORMAL);
     }
 
@@ -51,7 +49,6 @@ class CalculadoraPrioridadeTest {
 
     @Test
     void usaADataDeGoianiaENaoUtc() {
-        // 02:00 UTC de 14/11 ainda é 13/11 em Goiânia: aniversário de 60 anos ainda não chegou.
         CalculadoraPrioridade madrugada = calculadoraEm("2026-11-14T02:00:00Z");
         assertThat(madrugada.calcular(LocalDate.of(1966, 11, 14), Set.of())).isEqualTo(Prioridade.NORMAL);
     }

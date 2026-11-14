@@ -28,7 +28,6 @@ interface ConversaProps {
   mensagens: MensagemItem[];
 }
 
-/** Mensagens da equipe e do assistido, com o campo de resposta. */
 export function Conversa({ protocolo, status, mensagens }: ConversaProps) {
   const queryClient = useQueryClient();
   const { mostrar } = useToast();

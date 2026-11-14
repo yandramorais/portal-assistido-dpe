@@ -30,7 +30,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    /** Usado quando o e-mail não existe, para o tempo de resposta não revelar isso. */
     private final String hashFicticio;
 
     public AuthService(UsuarioRepository usuarioRepository, AssistidoRepository assistidoRepository,
@@ -50,7 +49,6 @@ public class AuthService {
                 usuario.map(Usuario::getSenhaHash).orElse(hashFicticio));
 
         if (usuario.isEmpty() || !senhaConfere || !usuario.get().isAtivo()) {
-            // Sem e-mail no log; o requestId (MDC) liga a tentativa ao log do nginx.
             log.info("Login recusado");
             throw new CredenciaisInvalidasException();
         }
@@ -58,7 +56,6 @@ public class AuthService {
         return emitirToken(usuario.get());
     }
 
-    /** Cria o login (ASSISTIDO) e a ficha do assistido na mesma transação e já devolve o token. */
     @Transactional
     public TokenResponse registrar(RegistroRequest request) {
         String email = request.email().trim().toLowerCase(Locale.ROOT);

@@ -14,7 +14,6 @@ import br.gov.go.defensoria.portal.solicitacao.domain.AreaAtuacao;
 import br.gov.go.defensoria.portal.solicitacao.domain.Solicitacao;
 import br.gov.go.defensoria.portal.solicitacao.domain.StatusSolicitacao;
 
-/** O kanban usa {@link SolicitacaoSpecifications} via JpaSpecificationExecutor. */
 public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long>, JpaSpecificationExecutor<Solicitacao> {
 
     interface TotalPorStatus {
@@ -32,11 +31,9 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long>,
     @EntityGraph(attributePaths = { "assistido", "unidade", "responsavel" })
     Optional<Solicitacao> findByProtocolo(String protocolo);
 
-    /** "Meus pedidos": unidade no mesmo SELECT para a lista não fazer N+1. */
     @EntityGraph(attributePaths = "unidade")
     Page<Solicitacao> findByAssistidoId(Long assistidoId, Pageable pageable);
 
-    /** Só encontra se o pedido for do assistido ligado a este usuário. */
     @EntityGraph(attributePaths = "unidade")
     Optional<Solicitacao> findByProtocoloAndAssistidoUsuarioId(String protocolo, Long usuarioId);
 
@@ -46,7 +43,6 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long>,
     @Query("select s.area as area, count(s) as total from Solicitacao s group by s.area")
     List<TotalPorArea> contarPorArea();
 
-    /** Próximo número da sequência usada no protocolo (DPE-AAAA-NNNNNN). */
     @Query(value = "select nextval('protocolo_seq')", nativeQuery = true)
     long proximoNumeroProtocolo();
 }

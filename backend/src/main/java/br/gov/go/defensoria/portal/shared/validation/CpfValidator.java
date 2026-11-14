@@ -26,12 +26,10 @@ public class CpfValidator implements ConstraintValidator<Cpf, String> {
                 && digitoVerificador(digitos, 10) == digitos.charAt(10) - '0';
     }
 
-    /** Remove máscara: "123.456.789-09" -> "12345678909". */
     public static String somenteDigitos(String valor) {
         return valor == null ? null : valor.replaceAll("\\D", "");
     }
 
-    /** Dígito verificador calculado sobre os {@code quantidade} primeiros dígitos (pesos decrescentes até 2). */
     private static int digitoVerificador(String digitos, int quantidade) {
         int soma = 0;
         for (int i = 0; i < quantidade; i++) {

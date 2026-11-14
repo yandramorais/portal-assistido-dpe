@@ -35,10 +35,6 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import br.gov.go.defensoria.portal.auth.domain.Perfil;
 import br.gov.go.defensoria.portal.shared.web.RequestIdFilter;
 
-/**
- * API stateless protegida por JWT HS256 (oauth2-resource-server). O mesmo segredo
- * (JWT_SECRET) assina e valida os tokens. Erros 401/403 saem como ProblemDetail.
- */
 @Configuration
 @EnableConfigurationProperties(JwtProperties.class)
 public class SecurityConfig {
@@ -59,7 +55,6 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole(Perfil.SERVIDOR.name(), Perfil.DEFENSOR.name())
-                        // Mensagens: assistido (nos próprios pedidos) e equipe; o service separa os casos.
                         .requestMatchers(HttpMethod.POST, "/api/solicitacoes/*/mensagens").authenticated()
                         .requestMatchers("/api/assistidos/me", "/api/solicitacoes/**").hasRole(Perfil.ASSISTIDO.name())
                         .anyRequest().authenticated())
@@ -70,7 +65,6 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(problemHandler)
                         .accessDeniedHandler(problemHandler))
-                // Id do usuário no MDC dos logs, logo depois de o token ser validado.
                 .addFilterAfter(new RequestIdFilter.UsuarioNoMdc(), BearerTokenAuthenticationFilter.class)
                 .build();
     }
@@ -94,7 +88,6 @@ public class SecurityConfig {
         return NimbusJwtDecoder.withSecretKey(jwtSecretKey).macAlgorithm(MacAlgorithm.HS256).build();
     }
 
-    /** Claim "perfil" (ex.: SERVIDOR) vira a authority ROLE_SERVIDOR. */
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter authorities = new JwtGrantedAuthoritiesConverter();

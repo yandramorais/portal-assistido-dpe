@@ -29,7 +29,6 @@ import br.gov.go.defensoria.portal.workflow.repository.MensagemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/** Pedidos do ponto de vista do assistido: só os próprios, sem notas internas. */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -58,7 +57,6 @@ public class SolicitacaoService {
                 calculadoraPrioridade.calcular(assistido.getDataNascimento(), assistido.getVulnerabilidades()),
                 avaliadorHipossuficiencia.avaliar(assistido.getRendaIndividual()));
 
-        // Checklist completo: o que o assistido marcou fica como entregue, o resto como pendente.
         Set<TipoDocumento> entregues = request.documentosEntregues() == null ? Set.of()
                 : request.documentosEntregues();
         for (TipoDocumento tipo : TipoDocumento.values()) {
@@ -78,7 +76,6 @@ public class SolicitacaoService {
     @Transactional(readOnly = true)
     public Page<SolicitacaoResumoResponse> listarMinhas(Long usuarioId, Pageable pageable) {
         Assistido assistido = assistidoService.obterPorUsuario(usuarioId);
-        // Ordem fixa (mais recentes primeiro); a ordenação enviada pelo cliente é ignorada.
         Pageable pagina = PageRequest.of(pageable.getPageNumber(),
                 Math.min(pageable.getPageSize(), TAMANHO_MAXIMO_PAGINA),
                 Sort.by(Sort.Order.desc("criadoEm"), Sort.Order.desc("id")));
@@ -86,7 +83,6 @@ public class SolicitacaoService {
                 .map(SolicitacaoResumoResponse::de);
     }
 
-    /** Pedido de outro assistido responde igual a protocolo inexistente (404), para não revelar que existe. */
     @Transactional(readOnly = true)
     public SolicitacaoDetalheResponse buscarMinha(Long usuarioId, String protocolo) {
         Solicitacao solicitacao = solicitacaoRepository.findByProtocoloAndAssistidoUsuarioId(protocolo, usuarioId)
@@ -100,7 +96,6 @@ public class SolicitacaoService {
                 mensagemRepository.findBySolicitacaoIdAndVisivelAssistidoTrueOrderByCriadoEm(solicitacao.getId()));
     }
 
-    /** DPE-AAAA-NNNNNN, com NNNNNN vindo da sequence protocolo_seq. */
     private String gerarProtocolo() {
         return "DPE-%d-%06d".formatted(Year.now(clock).getValue(), solicitacaoRepository.proximoNumeroProtocolo());
     }

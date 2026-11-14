@@ -24,7 +24,6 @@ import { ProgressoDosPassos } from './ProgressoDosPassos';
 const PASSOS = ['Dados pessoais', 'Endereço', 'Renda e família'] as const;
 const TODOS_OS_CAMPOS = CAMPOS_POR_PASSO.flat();
 
-/** Cadastro do assistido em 3 passos. Ao concluir, já entra logado (vai para Meus pedidos). */
 export function CadastroPage() {
   useTituloDaPagina('Criar cadastro');
   const { entrar } = useAuth();
@@ -33,7 +32,6 @@ export function CadastroPage() {
   const tituloDoPasso = useRef<HTMLHeadingElement>(null);
   const primeiraRenderizacao = useRef(true);
 
-  // Cada passo valida só os próprios campos; o formulário (e os dados) é um só.
   const passoAtual = useRef(0);
   const resolver: Resolver<DadosCadastro> = (valores, contexto, opcoes) =>
     RESOLVERS_POR_PASSO[passoAtual.current](valores, contexto, opcoes);
@@ -46,7 +44,6 @@ export function CadastroPage() {
     formState: { errors },
   } = useForm<DadosCadastro>({ resolver, defaultValues: VALORES_INICIAIS });
 
-  // Leva o foco ao título do passo para o leitor de tela anunciar a mudança.
   useEffect(() => {
     passoAtual.current = passo;
     if (primeiraRenderizacao.current) {
@@ -75,7 +72,6 @@ export function CadastroPage() {
     },
   });
 
-  // Erro que não é de um campo específico (rede, 500…) aparece no topo.
   const erroGeral =
     cadastro.isError &&
     !TODOS_OS_CAMPOS.some((campo) => errors[campo]?.type === 'server') &&

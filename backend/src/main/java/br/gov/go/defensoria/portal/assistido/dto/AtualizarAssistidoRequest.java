@@ -13,10 +13,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
-/**
- * Atualização completa (PUT) dos dados que o próprio assistido pode alterar.
- * CPF, data de nascimento e e-mail de login não mudam por aqui.
- */
 public record AtualizarAssistidoRequest(
         @NotBlank @Size(max = 150) String nome,
         @Size(max = 150) String nomeSocial,

@@ -7,11 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/**
- * Mudança de status feita pela equipe. Os campos exigidos dependem do destino:
- * DEFERIDO (dataAgendamento futura + localAtendimento), ENCAMINHADO (destino),
- * INDEFERIDO (motivo), PENDENTE_DOCUMENTACAO (devolutiva).
- */
 @Schema(description = "Mudança de status. Exemplo: deferir com agendamento.")
 public record AlterarStatusRequest(
         @Schema(example = "DEFERIDO") @NotNull StatusSolicitacao novoStatus,

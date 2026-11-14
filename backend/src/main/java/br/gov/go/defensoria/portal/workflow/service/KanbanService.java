@@ -43,13 +43,11 @@ import br.gov.go.defensoria.portal.workflow.repository.MensagemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/** Visão da equipe: quadro de triagem, detalhe do pedido, checklist e indicadores. */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class KanbanService {
 
-    /** ALTA primeiro; dentro da mesma prioridade, os mais antigos primeiro. */
     private static final Comparator<Solicitacao> ORDEM_DO_CARD = Comparator
             .comparing((Solicitacao s) -> s.getPrioridade() == Prioridade.ALTA ? 0 : 1)
             .thenComparing(Solicitacao::getCriadoEm)
@@ -62,7 +60,6 @@ public class KanbanService {
 
     @Transactional(readOnly = true)
     public KanbanResponse kanban(FiltroKanban filtro) {
-        // Filtros não informados vêm nulos e ficam de fora.
         Specification<Solicitacao> spec = Specification.allOf(Stream.of(
                 comDadosDoCard(),
                 daArea(filtro.area()),
@@ -89,7 +86,6 @@ public class KanbanService {
         return detalhe(buscar(protocolo));
     }
 
-    /** Atualiza só os tipos enviados. Confere a versão como na mudança de status. */
     @Transactional
     public SolicitacaoAdminResponse atualizarDocumentos(String protocolo, AtualizarDocumentosRequest request,
             Long usuarioId) {

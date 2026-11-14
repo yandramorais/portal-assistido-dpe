@@ -15,7 +15,6 @@ const tamanhos: Record<TamanhoBotao, string> = {
   sm: 'h-8 px-3 text-sm',
 };
 
-/** Classes do botão, usadas também por links com aparência de botão. */
 export function classesDeBotao(
   variante: VarianteBotao = 'primaria',
   tamanho: TamanhoBotao = 'md',

@@ -8,7 +8,6 @@ import type {
 
 import { ApiError } from './api';
 
-/** Aplica uma máscara de digitação a um campo registrado no React Hook Form. */
 export function comMascara<N extends string>(
   campo: UseFormRegisterReturn<N>,
   mascara: (valor: string) => string,
@@ -20,10 +19,6 @@ export function comMascara<N extends string>(
   return { ...campo, onChange };
 }
 
-/**
- * Coloca nos campos do formulário os erros devolvidos pelo backend (400 com "erros" e 409 com
- * "campo"). Devolve os campos marcados, para a tela levar o usuário até eles.
- */
 export function aplicarErrosDoServidor<T extends FieldValues>(
   erro: unknown,
   setError: UseFormSetError<T>,

@@ -7,10 +7,6 @@ interface EstadoDeOrigem {
   de?: string;
 }
 
-/**
- * Telas de entrar e cadastro. Quem já está logado (inclusive logo após o login) segue para
- * a página de onde veio, se ela for da sua área, ou para a página inicial do perfil.
- */
 export function SomenteVisitante() {
   const { usuario } = useAuth();
   const { state } = useLocation() as { state: EstadoDeOrigem | null };

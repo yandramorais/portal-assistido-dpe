@@ -23,7 +23,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-/** Respostas 401 e 403 da camada de segurança no formato ProblemDetail (RFC 9457). */
 @Component
 @RequiredArgsConstructor
 public class ProblemDetailSecurityHandler implements AuthenticationEntryPoint, AccessDeniedHandler {
