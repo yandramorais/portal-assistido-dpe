@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,6 +43,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CredenciaisInvalidasException.class)
     ProblemDetail credenciaisInvalidas(CredenciaisInvalidasException ex) {
         return problema(HttpStatus.UNAUTHORIZED, "Não autenticado", ex.getMessage());
+    }
+
+    @ExceptionHandler(NaoEncontradoException.class)
+    ProblemDetail naoEncontrado(NaoEncontradoException ex) {
+        return problema(HttpStatus.NOT_FOUND, "Não encontrado", ex.getMessage());
+    }
+
+    @ExceptionHandler(TransicaoInvalidaException.class)
+    ProblemDetail transicaoInvalida(TransicaoInvalidaException ex) {
+        ProblemDetail problema = problema(HttpStatus.UNPROCESSABLE_ENTITY, "Mudança de status não permitida",
+                ex.getMessage());
+        if (!ex.getCampos().isEmpty()) {
+            problema.setProperty("campos", ex.getCampos());
+        }
+        return problema;
+    }
+
+    /** Versão enviada desatualizada, ou duas gravações simultâneas no mesmo pedido. */
+    @ExceptionHandler({ ConflitoVersaoException.class, ObjectOptimisticLockingFailureException.class })
+    ProblemDetail conflitoVersao(Exception ex) {
+        return problema(HttpStatus.CONFLICT, "Pedido atualizado por outra pessoa", ConflitoVersaoException.MENSAGEM);
     }
 
     @ExceptionHandler(ConflitoException.class)
