@@ -11,6 +11,9 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+    properties:
+      # Coleções LAZY (ex.: checklist de documentos dos cards) carregadas em lote, não uma a uma.
+      hibernate.default_batch_fetch_size: 50
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
@@ -26,6 +29,12 @@ spring:
   mail:
     host: ${MAIL_HOST:localhost}
     port: ${MAIL_PORT:1025}
+    # Sem timeout o JavaMail espera para sempre se o SMTP cair, prendendo as threads do @Async
+    # e sem nunca gravar a FALHA. Com 5 s o envio falha e fica registrado em notificacao_email.
+    properties:
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
 
 portal:
   jwt:
@@ -33,6 +42,8 @@ portal:
     secret: ${JWT_SECRET:dev-secret-troque-em-producao-0123456789abcdef}
     expiracao: 8h
   frontend-url: ${FRONTEND_URL:http://localhost:5173}
+  mail:
+    remetente: ${MAIL_FROM:portal-assistido@dpe.local}
 
 dpe:
   salario-minimo: 1621.00
