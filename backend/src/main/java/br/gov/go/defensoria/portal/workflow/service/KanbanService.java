@@ -41,8 +41,10 @@ import br.gov.go.defensoria.portal.workflow.dto.SolicitacaoAdminResponse;
 import br.gov.go.defensoria.portal.workflow.repository.HistoricoStatusRepository;
 import br.gov.go.defensoria.portal.workflow.repository.MensagemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /** Visão da equipe: quadro de triagem, detalhe do pedido, checklist e indicadores. */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KanbanService {
@@ -89,11 +91,14 @@ public class KanbanService {
 
     /** Atualiza só os tipos enviados. Confere a versão como na mudança de status. */
     @Transactional
-    public SolicitacaoAdminResponse atualizarDocumentos(String protocolo, AtualizarDocumentosRequest request) {
+    public SolicitacaoAdminResponse atualizarDocumentos(String protocolo, AtualizarDocumentosRequest request,
+            Long usuarioId) {
         Solicitacao solicitacao = buscar(protocolo);
         TransicaoService.conferirVersao(solicitacao, request.versao());
         solicitacao.getDocumentos().putAll(request.documentos());
         solicitacaoRepository.flush();
+        log.info("Checklist de documentos atualizado: protocolo={} documentos={} usuarioId={}", protocolo,
+                request.documentos(), usuarioId);
         return detalhe(solicitacao);
     }
 

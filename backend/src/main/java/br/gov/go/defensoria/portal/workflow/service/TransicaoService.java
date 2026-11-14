@@ -29,8 +29,10 @@ import br.gov.go.defensoria.portal.workflow.dto.SolicitacaoAdminResponse;
 import br.gov.go.defensoria.portal.workflow.repository.HistoricoStatusRepository;
 import br.gov.go.defensoria.portal.workflow.repository.MensagemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /** Único ponto que muda o status de um pedido: valida o fluxo, grava histórico e publica o evento. */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TransicaoService {
@@ -79,6 +81,8 @@ public class TransicaoService {
 
         solicitacao.setStatus(destino);
         historicoRepository.save(new HistoricoStatus(solicitacao, anterior, destino, observacao, autor));
+        log.info("Transição de status: protocolo={} de={} para={} usuarioId={}", solicitacao.getProtocolo(),
+                anterior, destino, autor == null ? null : autor.getId());
         eventPublisher.publishEvent(new SolicitacaoAtualizadaEvent(solicitacao.getId(), solicitacao.getProtocolo(),
                 anterior, destino, emailDoAssistido(solicitacao.getAssistido()), notificarAssistido));
     }

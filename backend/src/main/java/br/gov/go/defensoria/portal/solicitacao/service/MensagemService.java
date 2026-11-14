@@ -16,12 +16,14 @@ import br.gov.go.defensoria.portal.workflow.domain.Mensagem;
 import br.gov.go.defensoria.portal.workflow.repository.MensagemRepository;
 import br.gov.go.defensoria.portal.workflow.service.TransicaoService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Conversa do pedido. O assistido só escreve nos próprios pedidos e sempre de forma visível;
  * se o pedido estava pendente de documentação, a resposta dele o devolve para análise.
  * A equipe escreve em qualquer pedido e pode deixar nota interna.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MensagemService {
@@ -45,6 +47,7 @@ public class MensagemService {
             Solicitacao solicitacao = solicitacaoRepository.findByProtocoloAndAssistidoUsuarioId(protocolo, usuarioId)
                     .orElseThrow(() -> new NaoEncontradoException(NAO_ENCONTRADA));
             Mensagem mensagem = mensagemRepository.save(new Mensagem(solicitacao, autor, conteudo, true));
+            log.info("Mensagem registrada: protocolo={} usuarioId={} visivelAssistido=true", protocolo, usuarioId);
 
             if (solicitacao.getStatus() == StatusSolicitacao.PENDENTE_DOCUMENTACAO) {
                 transicaoService.transicionar(solicitacao, StatusSolicitacao.EM_ANALISE, OBSERVACAO_REABERTURA, autor,
@@ -56,6 +59,8 @@ public class MensagemService {
         Solicitacao solicitacao = solicitacaoRepository.findByProtocolo(protocolo)
                 .orElseThrow(() -> new NaoEncontradoException(NAO_ENCONTRADA));
         boolean visivel = request.visivelAssistido() == null || request.visivelAssistido();
-        return MensagemResponse.de(mensagemRepository.save(new Mensagem(solicitacao, autor, conteudo, visivel)));
+        Mensagem mensagem = mensagemRepository.save(new Mensagem(solicitacao, autor, conteudo, visivel));
+        log.info("Mensagem registrada: protocolo={} usuarioId={} visivelAssistido={}", protocolo, usuarioId, visivel);
+        return MensagemResponse.de(mensagem);
     }
 }

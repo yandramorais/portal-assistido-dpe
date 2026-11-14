@@ -49,15 +49,31 @@ dpe:
   salario-minimo: 1621.00
   limite-salarios: 3
 
+# Actuator: só health (status UP/DOWN, sem detalhes) e info (nome e versão). Nada de env, beans etc.
 management:
   endpoints:
     web:
       exposure:
         include: health,info
+  endpoint:
+    health:
+      show-details: never
   health:
     mail:
       enabled: false
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    nome: Portal do Assistido
+    descricao: Defensoria Pública do Estado de Goiás
 
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    # Mantém o token do "Authorize" ao recarregar a página.
+    persist-authorization: true
+    tags-sorter: alpha
+    operations-sorter: method

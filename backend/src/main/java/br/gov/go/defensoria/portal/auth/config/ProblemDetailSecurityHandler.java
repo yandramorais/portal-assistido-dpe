@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.gov.go.defensoria.portal.shared.exception.GlobalExceptionHandler;
+import br.gov.go.defensoria.portal.shared.web.RequestIdFilter;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +50,7 @@ public class ProblemDetailSecurityHandler implements AuthenticationEntryPoint, A
         ProblemDetail problema = ProblemDetail.forStatusAndDetail(status, detalhe);
         problema.setTitle(titulo);
         problema.setInstance(URI.create(request.getRequestURI()));
+        problema.setProperty(GlobalExceptionHandler.PROPRIEDADE_REQUEST_ID, RequestIdFilter.atual());
 
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);

@@ -27,8 +27,10 @@ import br.gov.go.defensoria.portal.workflow.domain.HistoricoStatus;
 import br.gov.go.defensoria.portal.workflow.repository.HistoricoStatusRepository;
 import br.gov.go.defensoria.portal.workflow.repository.MensagemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /** Pedidos do ponto de vista do assistido: só os próprios, sem notas internas. */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SolicitacaoService {
@@ -66,6 +68,9 @@ public class SolicitacaoService {
 
         historicoRepository.save(new HistoricoStatus(solicitacao, null, StatusSolicitacao.AGUARDANDO_TRIAGEM,
                 "Solicitação registrada pelo assistido.", assistido.getUsuario()));
+        log.info("Solicitação criada: protocolo={} area={} prioridade={} hipossuficiencia={} usuarioId={}",
+                solicitacao.getProtocolo(), solicitacao.getArea(), solicitacao.getPrioridade(),
+                solicitacao.getHipossuficiencia(), usuarioId);
 
         return detalhe(solicitacao);
     }
