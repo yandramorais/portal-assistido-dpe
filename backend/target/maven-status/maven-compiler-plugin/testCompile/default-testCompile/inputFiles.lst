@@ -1,3 +1,5 @@
 /Users/yandramorais/Downloads/portal-assistido-dpe/backend/src/test/java/br/gov/go/defensoria/portal/PortalApplicationTests.java
 /Users/yandramorais/Downloads/portal-assistido-dpe/backend/src/test/java/br/gov/go/defensoria/portal/TestcontainersConfiguration.java
+/Users/yandramorais/Downloads/portal-assistido-dpe/backend/src/test/java/br/gov/go/defensoria/portal/auth/controller/AuthControllerTest.java
+/Users/yandramorais/Downloads/portal-assistido-dpe/backend/src/test/java/br/gov/go/defensoria/portal/shared/validation/CpfValidatorTest.java
 /Users/yandramorais/Downloads/portal-assistido-dpe/backend/src/test/java/br/gov/go/defensoria/portal/solicitacao/repository/SolicitacaoRepositoryTest.java
