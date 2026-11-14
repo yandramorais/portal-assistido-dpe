@@ -2,17 +2,18 @@ import type { ReactNode } from 'react';
 
 import { cn } from '../../lib/cn';
 
-type Tom = 'neutro' | 'primario' | 'perigo' | 'contorno';
+export type TomBadge = 'neutro' | 'primario' | 'perigo' | 'contorno' | 'destaque';
 
-const tons: Record<Tom, string> = {
+const tons: Record<TomBadge, string> = {
   neutro: 'bg-neutral-100 text-neutral-800 border-neutral-200',
   primario: 'bg-primary-50 text-primary-800 border-primary-200',
   perigo: 'bg-danger-50 text-danger-700 border-danger-200',
   contorno: 'bg-white text-neutral-700 border-neutral-300',
+  destaque: 'bg-primary-700 text-white border-primary-700',
 };
 
 interface BadgeProps {
-  tom?: Tom;
+  tom?: TomBadge;
   className?: string;
   children: ReactNode;
 }

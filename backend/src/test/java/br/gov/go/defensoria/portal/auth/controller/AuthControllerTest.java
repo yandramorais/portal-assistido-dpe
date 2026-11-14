@@ -96,14 +96,16 @@ class AuthControllerTest {
         // CPF da Maria Aparecida no seed, com máscara.
         registro("526.018.159-06", "outro@exemplo.com")
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.detail").value("Já existe cadastro com este CPF."));
+                .andExpect(jsonPath("$.detail").value("Já existe cadastro com este CPF."))
+                .andExpect(jsonPath("$.campo").value("cpf"));
     }
 
     @Test
     void registroComEmailDuplicadoDevolve409() throws Exception {
         registro("529.982.247-25", "MARIA@exemplo.com")
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.detail").value("Já existe cadastro com este e-mail."));
+                .andExpect(jsonPath("$.detail").value("Já existe cadastro com este e-mail."))
+                .andExpect(jsonPath("$.campo").value("email"));
     }
 
     @Test

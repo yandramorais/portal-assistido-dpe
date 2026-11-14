@@ -1,10 +1,13 @@
 export { Badge } from './Badge';
 export { Button } from './Button';
 export { Card } from './Card';
+export { Carregando } from './Carregando';
 export { Dialog } from './Dialog';
 export { EmptyState } from './EmptyState';
+export { EstadoDeErro } from './EstadoDeErro';
 export { Field } from './Field';
 export { Input } from './Input';
+export { LinkBotao } from './LinkBotao';
 export { Select } from './Select';
 export { Spinner } from './Spinner';
 export { Textarea } from './Textarea';

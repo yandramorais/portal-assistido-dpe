@@ -135,7 +135,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConflitoException.class)
     ProblemDetail conflito(ConflitoException ex) {
-        return problema(HttpStatus.CONFLICT, "Conflito", ex.getMessage());
+        ProblemDetail problema = problema(HttpStatus.CONFLICT, "Conflito", ex.getMessage());
+        if (ex.getCampo() != null) {
+            problema.setProperty("campo", ex.getCampo());
+        }
+        return problema;
     }
 
     /**

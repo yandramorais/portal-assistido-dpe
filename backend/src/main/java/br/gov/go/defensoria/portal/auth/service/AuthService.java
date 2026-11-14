@@ -66,11 +66,11 @@ public class AuthService {
 
         if (usuarioRepository.existsByEmailIgnoreCase(email)) {
             log.info("Cadastro recusado: e-mail já cadastrado");
-            throw new ConflitoException("Já existe cadastro com este e-mail.");
+            throw new ConflitoException("email", "Já existe cadastro com este e-mail.");
         }
         if (assistidoRepository.existsByCpf(cpf)) {
             log.info("Cadastro recusado: CPF já cadastrado");
-            throw new ConflitoException("Já existe cadastro com este CPF.");
+            throw new ConflitoException("cpf", "Já existe cadastro com este CPF.");
         }
 
         String nomeExibicao = StringUtils.hasText(request.nomeSocial()) ? request.nomeSocial().trim()

@@ -21,6 +21,7 @@ interface ProblemDetail {
   requestId?: string;
   erros?: ErroCampo[];
   campos?: string[];
+  campo?: string;
 }
 
 export class ApiError extends Error {
@@ -32,6 +33,8 @@ export class ApiError extends Error {
   readonly erros: ErroCampo[];
   /** Campos que faltam numa mudança de status (422). */
   readonly campos: string[];
+  /** Campo que causou um conflito (409), ex.: "email" ou "cpf" no cadastro. */
+  readonly campo?: string;
 
   constructor(dados: {
     status: number;
@@ -40,6 +43,7 @@ export class ApiError extends Error {
     requestId?: string;
     erros?: ErroCampo[];
     campos?: string[];
+    campo?: string;
   }) {
     super(dados.detalhe);
     this.name = 'ApiError';
@@ -48,6 +52,7 @@ export class ApiError extends Error {
     this.requestId = dados.requestId;
     this.erros = dados.erros ?? [];
     this.campos = dados.campos ?? [];
+    this.campo = dados.campo;
   }
 
   /** Mensagem do campo vinda do servidor, para mostrar junto ao campo no formulário. */
@@ -85,6 +90,7 @@ async function paraApiError(resposta: Response): Promise<ApiError> {
     requestId: corpo.requestId ?? resposta.headers.get('X-Request-Id') ?? undefined,
     erros: corpo.erros,
     campos: corpo.campos,
+    campo: corpo.campo,
   });
 }
 
