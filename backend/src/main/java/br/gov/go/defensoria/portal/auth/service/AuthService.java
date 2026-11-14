@@ -19,7 +19,9 @@ import br.gov.go.defensoria.portal.auth.repository.UsuarioRepository;
 import br.gov.go.defensoria.portal.shared.exception.ConflitoException;
 import br.gov.go.defensoria.portal.shared.exception.CredenciaisInvalidasException;
 import br.gov.go.defensoria.portal.shared.validation.CpfValidator;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class AuthService {
 
@@ -48,8 +50,11 @@ public class AuthService {
                 usuario.map(Usuario::getSenhaHash).orElse(hashFicticio));
 
         if (usuario.isEmpty() || !senhaConfere || !usuario.get().isAtivo()) {
+            // Sem e-mail no log; o requestId (MDC) liga a tentativa ao log do nginx.
+            log.info("Login recusado");
             throw new CredenciaisInvalidasException();
         }
+        log.info("Login: usuarioId={} perfil={}", usuario.get().getId(), usuario.get().getPerfil());
         return emitirToken(usuario.get());
     }
 
@@ -60,9 +65,11 @@ public class AuthService {
         String cpf = CpfValidator.somenteDigitos(request.cpf());
 
         if (usuarioRepository.existsByEmailIgnoreCase(email)) {
+            log.info("Cadastro recusado: e-mail já cadastrado");
             throw new ConflitoException("Já existe cadastro com este e-mail.");
         }
         if (assistidoRepository.existsByCpf(cpf)) {
+            log.info("Cadastro recusado: CPF já cadastrado");
             throw new ConflitoException("Já existe cadastro com este CPF.");
         }
 
@@ -94,6 +101,7 @@ public class AuthService {
             assistido.getVulnerabilidades().addAll(request.vulnerabilidades());
         }
         assistidoRepository.save(assistido);
+        log.info("Assistido cadastrado: usuarioId={}", usuario.getId());
 
         return emitirToken(usuario);
     }

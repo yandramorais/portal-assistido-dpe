@@ -58,7 +58,7 @@ public class EnvioEmailListener {
             return;
         }
         if (evento.destinatario() == null) {
-            log.warn("Pedido {} sem e-mail do assistido; notificação não enviada.", evento.protocolo());
+            log.warn("E-mail de atualização não enviado (assistido sem e-mail): protocolo={}", evento.protocolo());
             return;
         }
 
@@ -70,8 +70,12 @@ public class EnvioEmailListener {
             mailSender.send(email);
             notificacao.setStatus(StatusNotificacao.ENVIADO);
             notificacao.setEnviadoEm(Instant.now(clock));
+            log.info("E-mail de atualização: protocolo={} status={}", evento.protocolo(), StatusNotificacao.ENVIADO);
         } catch (RuntimeException e) {
-            log.warn("Falha ao enviar e-mail do pedido {}: {}", evento.protocolo(), e.getMessage());
+            // A mensagem da exceção pode conter o endereço do destinatário: no log só a classe.
+            // O texto completo fica em notificacao_email.erro, visível só para a equipe.
+            log.warn("E-mail de atualização: protocolo={} status={} erro={}", evento.protocolo(),
+                    StatusNotificacao.FALHA, e.getClass().getSimpleName());
             notificacao.setStatus(StatusNotificacao.FALHA);
             notificacao.setErro(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
