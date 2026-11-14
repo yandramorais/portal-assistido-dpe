@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -32,6 +33,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
 import br.gov.go.defensoria.portal.auth.domain.Perfil;
+import br.gov.go.defensoria.portal.shared.web.RequestIdFilter;
 
 /**
  * API stateless protegida por JWT HS256 (oauth2-resource-server). O mesmo segredo
@@ -53,10 +55,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/unidades").permitAll()
-                        .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/health/**", "/actuator/info").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole(Perfil.SERVIDOR.name(), Perfil.DEFENSOR.name())
+                        // Mensagens: assistido (nos próprios pedidos) e equipe; o service separa os casos.
+                        .requestMatchers(HttpMethod.POST, "/api/solicitacoes/*/mensagens").authenticated()
+                        .requestMatchers("/api/assistidos/me", "/api/solicitacoes/**").hasRole(Perfil.ASSISTIDO.name())
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter))
@@ -65,6 +70,8 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(problemHandler)
                         .accessDeniedHandler(problemHandler))
+                // Id do usuário no MDC dos logs, logo depois de o token ser validado.
+                .addFilterAfter(new RequestIdFilter.UsuarioNoMdc(), BearerTokenAuthenticationFilter.class)
                 .build();
     }
 
