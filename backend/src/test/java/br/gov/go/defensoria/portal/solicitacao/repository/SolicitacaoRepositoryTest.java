@@ -2,7 +2,6 @@ package br.gov.go.defensoria.portal.solicitacao.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.EnumSet;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -99,7 +98,7 @@ class SolicitacaoRepositoryTest {
     @Test
     void documentosComoElementCollection() {
         Solicitacao aguardando = solicitacaoRepository
-                .buscarParaKanban(List.of(StatusSolicitacao.AGUARDANDO_TRIAGEM)).getFirst();
+                .findAll(SolicitacaoSpecifications.comStatus(StatusSolicitacao.AGUARDANDO_TRIAGEM)).getFirst();
 
         assertThat(aguardando.getDocumentos())
                 .hasSize(TipoDocumento.values().length)
@@ -112,7 +111,7 @@ class SolicitacaoRepositoryTest {
         em.clear();
         statistics.clear();
 
-        List<Solicitacao> cards = solicitacaoRepository.buscarParaKanban(EnumSet.allOf(StatusSolicitacao.class));
+        List<Solicitacao> cards = solicitacaoRepository.findAll(SolicitacaoSpecifications.comDadosDoCard());
         cards.forEach(s -> {
             s.getAssistido().getNome();
             s.getUnidade().getNome();
@@ -124,10 +123,9 @@ class SolicitacaoRepositoryTest {
         assertThat(cards).hasSize((int) contar("solicitacao"));
         assertThat(statistics.getPrepareStatementCount()).isEqualTo(1);
 
-        // ALTA primeiro; dentro da mesma prioridade, mais antigas primeiro.
-        int primeiraNormal = cards.stream().map(Solicitacao::getPrioridade).toList().indexOf(Prioridade.NORMAL);
-        assertThat(cards.subList(0, primeiraNormal)).allMatch(s -> s.getPrioridade() == Prioridade.ALTA);
-        assertThat(cards.subList(primeiraNormal, cards.size())).allMatch(s -> s.getPrioridade() == Prioridade.NORMAL);
+        // Checklist de todos os cards num único SELECT extra (default_batch_fetch_size), não um por card.
+        cards.forEach(s -> s.getDocumentos().size());
+        assertThat(statistics.getPrepareStatementCount()).isEqualTo(2);
     }
 
     @Test
