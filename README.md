@@ -1,6 +1,6 @@
 # Portal do Assistido — DPE-GO
 
-Sistema em que o cidadão pede atendimento à Defensoria Pública do Estado de Goiás e acompanha o pedido, e em que a equipe faz a triagem num quadro kanban, com devolutiva no portal e por e-mail.
+Sistema em que o cidadão pede atendimento à Defensoria Pública do Estado de Goiás e acompanha o pedido, e em que a equipe faz a triagem num quadro kanban, com devolutiva no portal.
 
 [![CI](https://github.com/yandramorais/portal-assistido-dpe/actions/workflows/ci.yml/badge.svg)](https://github.com/yandramorais/portal-assistido-dpe/actions/workflows/ci.yml)
 
@@ -15,8 +15,7 @@ Sistema em que o cidadão pede atendimento à Defensoria Pública do Estado de G
 - [Como recarregar os dados](#como-recarregar-os-dados)
 - [Arquitetura](#arquitetura)
 - [Regras de negócio](#regras-de-negócio)
-- [Decisões técnicas](#decisões-técnicas)
-- [Próximos passos](#próximos-passos)
+- [Tecnologias](#tecnologias)
 - [Como rodar os testes](#como-rodar-os-testes)
 - [Suporte N2](docs/SUPORTE-N2.md)
 - [Autora](#autora)
@@ -82,13 +81,12 @@ O back-end sobe com o perfil `dev`, que aplica o schema e carrega os dados fict�
 | Portal | http://localhost:5173 |
 | API | http://localhost:8080 |
 | Swagger | http://localhost:8080/swagger-ui.html |
-| Mailpit (e-mails enviados) | http://localhost:8025 |
 
 Todos os usuários de teste usam a senha `Senha@123`.
 
 | Usuário | Perfil | O que mostra |
 | --- | --- | --- |
-| servidor@dpe.local | Servidor | Quadro de triagem completo, transições, notas internas e log de e-mails, incluindo um envio com falha. |
+| servidor@dpe.local | Servidor | Quadro de triagem completo, transições e notas internas. |
 | defensor@dpe.local | Defensor | As mesmas telas da equipe; é o responsável por parte dos pedidos do seed. |
 | maria@exemplo.com | Assistida | Pessoa idosa (prioridade alta) com um pedido aguardando triagem e outro deferido com data e local de atendimento. |
 | carlos@exemplo.com | Assistido | Renda acima do critério: pedido indeferido com motivo e outro aguardando triagem. |
@@ -109,11 +107,10 @@ flowchart LR
     navegador[Navegador] -->|http :5173| web["web<br/>nginx + React"]
     web -->|/api| api["api<br/>Spring Boot :8080"]
     api -->|JDBC| postgres[("postgres<br/>PostgreSQL 16")]
-    api -->|SMTP :1025| mailpit["mailpit<br/>caixa de e-mail de teste :8025"]
 ```
 
-- `frontend/`: React 18, TypeScript, Vite, Tailwind CSS, TanStack Query, React Hook Form com Zod e dnd-kit. Em produção é servido pelo nginx, que repassa `/api` ao back-end.
-- `backend/`: Java 21 e Spring Boot 3, com JPA, Spring Security (JWT), Liquibase, springdoc-openapi, Actuator e envio de e-mail. Organizado por domínio em `auth`, `assistido`, `solicitacao`, `workflow`, `notificacao`, `unidade` e `shared`.
+- `frontend/`: aplicação React organizada por funcionalidade. Em produção é servida pelo nginx, que repassa `/api` ao back-end.
+- `backend/`: API Spring Boot organizada por domínio em `auth`, `assistido`, `solicitacao`, `workflow`, `notificacao`, `unidade` e `shared`.
 
 Fluxo de status do pedido:
 
@@ -133,7 +130,7 @@ stateDiagram-v2
     CONCLUIDO --> [*]
 ```
 
-Qualquer transição fora desse mapa é recusada pela API. Cada mudança grava o histórico e dispara um e-mail ao assistido.
+Qualquer transição fora desse mapa é recusada pela API. Cada mudança grava o histórico.
 
 ## Regras de negócio
 
@@ -142,22 +139,13 @@ Qualquer transição fora desse mapa é recusada pela API. Cada mudança grava o
 - **Documentos.** O assistido marca quais documentos já tem e pode enviar o pedido sem todos eles. A equipe vê quantos faltam no card e pode mover o pedido para "Pendente de documentação" com uma devolutiva explicando o que falta.
 - **Indeferimento e revisão.** Indeferir exige um motivo, que o assistido vê no detalhe do pedido. Se quiser recorrer, ele escreve na conversa do pedido, e a equipe pode devolvê-lo para "Em análise".
 
-## Decisões técnicas
+## Tecnologias
 
-- **React em vez de Angular.** A vaga cita React como diferencial; o front segue a mesma organização por funcionalidade que um projeto Angular teria, o que facilita uma versão futura nele.
-- **Edição simultânea.** A solicitação tem `@Version`. Se duas pessoas movem o mesmo card, a segunda recebe 409 e o quadro avisa: "Este pedido foi alterado por outra pessoa. Recarregue o quadro."
-- **E-mail depois do commit.** O envio roda em `@TransactionalEventListener(AFTER_COMMIT)` e `@Async`, então uma falha no servidor de e-mail não desfaz a mudança de status. Cada envio é registrado em `notificacao_email` com status e erro, e a equipe consulta esse log na tela de notificações.
-- **Erros padronizados.** A API responde erros em ProblemDetail (RFC 9457) com um `requestId`. O mesmo código aparece na tela para o usuário e em todas as linhas de log da requisição, o que liga a reclamação ao log em segundos.
-- **Liquibase com seed por context.** O schema sobe em todos os ambientes; os dados fictícios só entram com o context `dev`. O Hibernate apenas valida o schema (`ddl-auto=validate`).
-- **LGPD.** O CPF aparece mascarado no quadro; o e-mail ao assistido traz só protocolo e situação, sem relato nem devolutiva; os logs registram ids e protocolos, nunca CPF, e-mail ou relato.
-- **Sem Spring Cloud nem Elasticsearch.** É uma aplicação única com um banco; Spring Cloud resolve problemas de muitos serviços que este escopo não tem, e a busca do quadro (nome, CPF e protocolo) é atendida pelo próprio PostgreSQL no volume esperado.
-
-## Próximos passos
-
-- Upload de documentos no pedido, com armazenamento em objeto e verificação de tipo e tamanho.
-- Refresh token, para sessões longas sem token de acesso de 8 horas.
-- Elasticsearch para busca textual no relato dos pedidos.
-- Versão do front-end em Angular.
+- **Back-end:** Java 21, Spring Boot 3, Spring Web, Bean Validation, Spring Data JPA, Spring Security com JWT, Liquibase, Lombok, springdoc-openapi e Actuator.
+- **Front-end:** React 18, TypeScript, Vite, Tailwind CSS, React Router, TanStack Query, React Hook Form com Zod, dnd-kit e date-fns.
+- **Banco de dados:** PostgreSQL 16.
+- **Infraestrutura:** Docker Compose e nginx.
+- **Testes e CI:** JUnit, Testcontainers, Vitest, Testing Library e GitHub Actions.
 
 ## Como rodar os testes
 
